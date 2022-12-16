@@ -1,7 +1,8 @@
 package models
 
 type File struct {
-	Nome string `json:"nome"`
+	Posicao int    `json:"posicao"`
+	Nome    string `json:"nome"`
 }
 
 var Files []File
