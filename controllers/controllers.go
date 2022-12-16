@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,10 +11,6 @@ import (
 	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/elements"
 	"github.com/xuri/excelize/v2"
 )
-
-func Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Home Page")
-}
 
 func AllElements(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

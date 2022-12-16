@@ -1,0 +1,8 @@
+# The .dockerignore file excludes files from the container build process.
+Dockerfile
+README.md
+vendor/
+
+.dockerignore
+.gcloudignore
+.gitignore

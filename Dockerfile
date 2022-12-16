@@ -1,6 +1,6 @@
 FROM golang:latest AS builder
 
-WORKDIR /go/src/github.com/luuisavelino/short-circuit-analysis-algorithm/
+WORKDIR /go/src/github.com/luuisavelino/short-circuit-analysis-elements/
 
 COPY . .
 
@@ -17,9 +17,9 @@ FROM alpine:latest
 
 WORKDIR /root/
 
-COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-algorithm/data/ ./files
+COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-elements/files/ ./files
 
-COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-algorithm/main ./
+COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-elements/main ./
 
 EXPOSE 8001
 
