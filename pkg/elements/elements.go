@@ -19,7 +19,7 @@ func transformadores(tabela_excel *excelize.File) map[string]models.Element {
 
 		transformador := dados_transformadores[x][0] + "-" + dados_transformadores[x][1]
 		impedancia_atual_p := elementos_transformadores[transformador].Z_positiva
-		impedancia_atual_z := elementos_transformadores[transformador].Z_positiva
+		impedancia_atual_z := elementos_transformadores[transformador].Z_zero
 
 		z_positiva := functions.Impedancia(dados_transformadores[x][3], dados_transformadores[x][4], impedancia_atual_p)
 		z_zero := functions.Impedancia("0", dados_transformadores[x][5], impedancia_atual_z) + 3*functions.Impedancia("0", dados_transformadores[x][6], impedancia_atual_z)

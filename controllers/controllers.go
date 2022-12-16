@@ -16,7 +16,6 @@ func Readness(w http.ResponseWriter, r *http.Request) {}
 
 func Liveness(w http.ResponseWriter, r *http.Request) {}
 
-
 func AllElements(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileId, _ := strconv.Atoi(vars["fileId"])
@@ -27,7 +26,7 @@ func AllElements(w http.ResponseWriter, r *http.Request) {
 	}
 
 	models.Elements["1"] = elements.Elementos_tipo_1(tabela_dados)
-	models.Elements["2-3"] = elements.Elementos_tipo_2_3(tabela_dados)
+	models.Elements["2"] = elements.Elementos_tipo_2_3(tabela_dados)
 
 	json.NewEncoder(w).Encode(models.Elements)
 }
