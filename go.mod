@@ -1,4 +1,4 @@
-module github.com/luuisavelino/short-circuit-analysis-api
+module github.com/luuisavelino/short-circuit-analysis-elements
 
 go 1.18
 

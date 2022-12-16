@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/luuisavelino/short-circuit-analysis-api/models"
-	"github.com/luuisavelino/short-circuit-analysis-api/pkg/elements"
+	"github.com/luuisavelino/short-circuit-analysis-elements/models"
+	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/elements"
 	"github.com/xuri/excelize/v2"
 )
 

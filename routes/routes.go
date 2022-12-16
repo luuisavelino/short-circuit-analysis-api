@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/luuisavelino/short-circuit-analysis-api/controllers"
+	"github.com/luuisavelino/short-circuit-analysis-elements/controllers"
 )
 
 func HandleRequest() {

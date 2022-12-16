@@ -3,8 +3,8 @@ package elements
 import (
 	"strconv"
 
-	"github.com/luuisavelino/short-circuit-analysis-api/models"
-	"github.com/luuisavelino/short-circuit-analysis-api/pkg/functions"
+	"github.com/luuisavelino/short-circuit-analysis-elements/models"
+	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/functions"
 	"github.com/xuri/excelize/v2"
 )
 

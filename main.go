@@ -5,8 +5,8 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/luuisavelino/short-circuit-analysis-api/models"
-	"github.com/luuisavelino/short-circuit-analysis-api/routes"
+	"github.com/luuisavelino/short-circuit-analysis-elements/models"
+	"github.com/luuisavelino/short-circuit-analysis-elements/routes"
 )
 
 func main() {
