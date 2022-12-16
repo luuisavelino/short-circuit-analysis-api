@@ -21,6 +21,6 @@ COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-elements/fi
 
 COPY --from=0 /go/src/github.com/luuisavelino/short-circuit-analysis-elements/main ./
 
-EXPOSE 8001
+EXPOSE 8080
 
 CMD ["./main"]

@@ -12,6 +12,11 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+func Readness(w http.ResponseWriter, r *http.Request) {}
+
+func Liveness(w http.ResponseWriter, r *http.Request) {}
+
+
 func AllElements(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileId, _ := strconv.Atoi(vars["fileId"])
