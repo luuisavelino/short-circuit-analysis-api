@@ -1,6 +1,7 @@
 package models
 
 type Element struct {
+	Id         int    `json:"id"`
 	De         string `json:"de"`
 	Para       string `json:"para"`
 	Nome       string `json:"nome"`
@@ -8,4 +9,4 @@ type Element struct {
 	Z_zero     string `json:"z_zero"`
 }
 
-var Elements = make(map[string]Element)
+var Elements = make(map[string]map[string]Element)

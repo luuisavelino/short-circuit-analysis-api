@@ -14,6 +14,7 @@ func HandleRequest() {
 	r.HandleFunc("/files", controllers.AllFiles).Methods("Get")
 	r.HandleFunc("/files/{fileId}", controllers.OneFile).Methods("Get")
 	r.HandleFunc("/files/{fileId}/elements", controllers.AllElements).Methods("Get")
-	r.HandleFunc("/files/{fileId}/elements/{line}", controllers.OneElement).Methods("Get")
-	log.Fatal(http.ListenAndServe(":8000", r))
+	r.HandleFunc("/files/{fileId}/elements/type/{typeId}", controllers.AllElementsType).Methods("Get")
+	r.HandleFunc("/files/{fileId}/elements/type/{typeId}/element/{elementId}", controllers.OneElement).Methods("Get")
+	log.Fatal(http.ListenAndServe(":8001", r))
 }
