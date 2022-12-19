@@ -3,6 +3,8 @@ package functions
 import (
 	"log"
 	"strconv"
+
+	"github.com/xuri/excelize/v2"
 )
 
 func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atual_str string) complex128 {
@@ -30,4 +32,17 @@ func ErrorValidade(err error) {
 		log.Fatal(err.Error())
 		return
 	}
+}
+
+func SystemInfo(tabela_excel *excelize.File) (int, []string) {
+	barras, _ := tabela_excel.GetRows(tabela_excel.GetSheetList()[0])
+	systemSize := len(barras) - 2
+
+	var bars []string
+
+	for x := 2; x < len(barras); x++ {
+		bars = append(bars, (barras[x][0]))
+	}
+
+	return systemSize, bars
 }

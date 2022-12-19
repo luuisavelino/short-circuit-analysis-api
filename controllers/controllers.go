@@ -9,12 +9,39 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
 	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/elements"
+	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/functions"
 	"github.com/xuri/excelize/v2"
 )
 
 func Readness(w http.ResponseWriter, r *http.Request) {}
 
 func Liveness(w http.ResponseWriter, r *http.Request) {}
+
+func SystemSize(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fileId, _ := strconv.Atoi(vars["fileId"])
+
+	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	if err != nil {
+		log.Fatal("Arquivo não encontrado, tente novamente")
+	}
+
+	systemSize, _ := functions.SystemInfo(tabela_dados)
+	json.NewEncoder(w).Encode(systemSize)
+}
+
+func SystemBars(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fileId, _ := strconv.Atoi(vars["fileId"])
+
+	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	if err != nil {
+		log.Fatal("Arquivo não encontrado, tente novamente")
+	}
+
+	_, bars := functions.SystemInfo(tabela_dados)
+	json.NewEncoder(w).Encode(bars)
+}
 
 func AllElements(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
