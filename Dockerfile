@@ -1,6 +1,6 @@
 FROM golang:1.18-bullseye AS build-stage
 
-WORKDIR /go/src/github.com/luuisavelino/short-circuit-analysis-elements/
+WORKDIR /short-circuit-analysis-elements/
 
 COPY . .
 
@@ -13,11 +13,13 @@ COPY ./main.go .
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o main .
 
 
-FROM alpine:latest
+FROM alpine:3.17.0
 
-COPY --from=build-stage /go/src/github.com/luuisavelino/short-circuit-analysis-elements/files/ ./files
+WORKDIR /short-circuit-analysis-elements/
 
-COPY --from=build-stage /go/src/github.com/luuisavelino/short-circuit-analysis-elements/main ./run/
+COPY --from=build-stage /short-circuit-analysis-elements/files/ ./files
+
+COPY --from=build-stage /short-circuit-analysis-elements/main ./
 
 EXPOSE 8080
 
