@@ -1,4 +1,4 @@
-FROM golang:latest AS build-stage
+FROM golang:1.18-bullseye AS build-stage
 
 WORKDIR /go/src/github.com/luuisavelino/short-circuit-analysis-elements/
 
