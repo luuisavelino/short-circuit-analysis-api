@@ -7,15 +7,15 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atual_str string) complex128 {
+func Impedancia(resistencia_linha string, reatancia_linha string, impedanciaAtual_str string) complex128 {
 	var resistencia, _ = strconv.ParseFloat(resistencia_linha, 64)
 	var reatancia, _ = strconv.ParseFloat(reatancia_linha, 64)
-	var impedancia_atual, _ = strconv.ParseComplex(impedancia_atual_str, 128)
+	var impedanciaAtual, _ = strconv.ParseComplex(impedanciaAtual_str, 128)
 
 	impedancia := complex(resistencia, reatancia)
 
-	if impedancia_atual != 0 {
-		impedancia = (impedancia * impedancia_atual) / (impedancia + impedancia_atual)
+	if impedanciaAtual != 0 {
+		impedancia = (impedancia * impedanciaAtual) / (impedancia + impedanciaAtual)
 	}
 
 	return impedancia

@@ -10,25 +10,25 @@ import (
 
 func transformadores(tabela_excel *excelize.File) map[string]models.Element {
 
-	dados_transformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
-	dados_transformadores = dados_transformadores[2:]
+	dadosTransformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
+	dadosTransformadores = dadosTransformadores[2:]
 	functions.ErrorValidade(err)
 
 	elementos_transformadores := make(map[string]models.Element)
-	for x := 0; x < len(dados_transformadores); x++ {
+	for x := 0; x < len(dadosTransformadores); x++ {
 
-		transformador := dados_transformadores[x][0] + "-" + dados_transformadores[x][1]
-		impedancia_atual_p := elementos_transformadores[transformador].Z_positiva
-		impedancia_atual_z := elementos_transformadores[transformador].Z_zero
+		transformador := dadosTransformadores[x][0] + "-" + dadosTransformadores[x][1]
+		impedanciaAtualP := elementos_transformadores[transformador].Z_positiva
+		impedanciaAtualZ := elementos_transformadores[transformador].Z_zero
 
-		z_positiva := functions.Impedancia(dados_transformadores[x][3], dados_transformadores[x][4], impedancia_atual_p)
-		z_zero := functions.Impedancia("0", dados_transformadores[x][5], impedancia_atual_z) + 3*functions.Impedancia("0", dados_transformadores[x][6], impedancia_atual_z)
+		z_positiva := functions.Impedancia(dadosTransformadores[x][3], dadosTransformadores[x][4], impedanciaAtualP)
+		z_zero := functions.Impedancia("0", dadosTransformadores[x][5], impedanciaAtualZ) + 3*functions.Impedancia("0", dadosTransformadores[x][6], impedanciaAtualZ)
 
 		elementos_transformadores[transformador] = models.Element{
 			Id:         x,
-			De:         dados_transformadores[x][0],
-			Para:       dados_transformadores[x][1],
-			Nome:       dados_transformadores[x][2],
+			De:         dadosTransformadores[x][0],
+			Para:       dadosTransformadores[x][1],
+			Nome:       dadosTransformadores[x][2],
 			Z_positiva: strconv.FormatComplex(z_positiva, 'g', 'g', 64),
 			Z_zero:     strconv.FormatComplex(z_zero, 'g', 'g', 64),
 		}
@@ -38,53 +38,53 @@ func transformadores(tabela_excel *excelize.File) map[string]models.Element {
 }
 
 func Elementos_tipo_1(tabela_excel *excelize.File) map[string]models.Element {
-	var elementos_tipo_1 = make(map[string]models.Element)
+	var elementosTipo1 = make(map[string]models.Element)
 
-	dados_linhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[2])
-	dados_linhas = dados_linhas[1:]
+	dadosLinhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[2])
+	dadosLinhas = dadosLinhas[1:]
 	functions.ErrorValidade(err)
 
-	for x := 0; x < len(dados_linhas); x++ {
-		elementos_tipo_1[dados_linhas[x][0]] = models.Element{
+	for x := 0; x < len(dadosLinhas); x++ {
+		elementosTipo1[dadosLinhas[x][0]] = models.Element{
 			Id:         x,
-			De:         dados_linhas[x][0],
-			Nome:       dados_linhas[x][1],
-			Z_positiva: strconv.FormatComplex(complex(0, functions.StringToFloat(dados_linhas[x][2])/100), 'g', 'g', 64),
-			Z_zero:     strconv.FormatComplex(complex(0, functions.StringToFloat(dados_linhas[x][3])+3*functions.StringToFloat(dados_linhas[x][4])), 'g', 'g', 128),
+			De:         dadosLinhas[x][0],
+			Nome:       dadosLinhas[x][1],
+			Z_positiva: strconv.FormatComplex(complex(0, functions.StringToFloat(dadosLinhas[x][2])/100), 'g', 'g', 64),
+			Z_zero:     strconv.FormatComplex(complex(0, functions.StringToFloat(dadosLinhas[x][3])+3*functions.StringToFloat(dadosLinhas[x][4])), 'g', 'g', 128),
 		}
 	}
 
-	return elementos_tipo_1
+	return elementosTipo1
 }
 
 func Elementos_tipo_2_3(tabela_excel *excelize.File) map[string]models.Element {
-	var elementos_tipo_2_3 = make(map[string]models.Element)
+	var elementosTipo23 = make(map[string]models.Element)
 
-	dados_linhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[1])
-	dados_linhas = dados_linhas[2:]
+	dadosLinhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[1])
+	dadosLinhas = dadosLinhas[2:]
 	functions.ErrorValidade(err)
 
 	// Adicionando todos os elementos dos transformadores como tipos 2 e 3
 	for _, dado_do_transformador := range transformadores(tabela_excel) {
-		elementos_tipo_2_3[dado_do_transformador.De+"-"+dado_do_transformador.Para] = dado_do_transformador
+		elementosTipo23[dado_do_transformador.De+"-"+dado_do_transformador.Para] = dado_do_transformador
 	}
-	elementId := len(elementos_tipo_2_3)
+	elementId := len(elementosTipo23)
 
 	// Adicionando as linhas como elementos do tipo 2 e 3
-	for x := 0; x < len(dados_linhas); x++ {
-		z_positiva := functions.Impedancia(dados_linhas[x][2], dados_linhas[x][3], "0")
-		z_zero := functions.Impedancia(dados_linhas[x][4], dados_linhas[x][5], "0")
+	for x := 0; x < len(dadosLinhas); x++ {
+		z_positiva := functions.Impedancia(dadosLinhas[x][2], dadosLinhas[x][3], "0")
+		z_zero := functions.Impedancia(dadosLinhas[x][4], dadosLinhas[x][5], "0")
 
-		elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]] = models.Element{
+		elementosTipo23[dadosLinhas[x][0]+"-"+dadosLinhas[x][1]] = models.Element{
 			Id:         elementId,
-			De:         dados_linhas[x][0],
-			Para:       dados_linhas[x][1],
-			Nome:       dados_linhas[x][2],
+			De:         dadosLinhas[x][0],
+			Para:       dadosLinhas[x][1],
+			Nome:       dadosLinhas[x][2],
 			Z_positiva: strconv.FormatComplex(z_positiva, 'g', 'g', 64),
 			Z_zero:     strconv.FormatComplex(z_zero, 'g', 'g', 64),
 		}
 		elementId++
 	}
 
-	return elementos_tipo_2_3
+	return elementosTipo23
 }
