@@ -11,7 +11,7 @@ import (
 func HandleRequest() {
 	r := mux.NewRouter()
 	r.HandleFunc("/health/liveness", controllers.Liveness).Methods("Get")
-	r.HandleFunc("/health/readiness", controllers.Readness).Methods("Get")
+	r.HandleFunc("/health/readiness", controllers.Readiness).Methods("Get")
 	r.HandleFunc("/api/files", controllers.AllFiles).Methods("Get")
 	r.HandleFunc("/api/files/{fileId}", controllers.OneFile).Methods("Get")
 	r.HandleFunc("/api/files/{fileId}/size", controllers.SystemSize).Methods("Get")

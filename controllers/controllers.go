@@ -13,20 +13,29 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func Readness(w http.ResponseWriter, r *http.Request) {}
+const (
+	mensagemErroArquivo = "Arquivo não encontrado, tente novamente"
+	path                  = "./files/"
+)
 
-func Liveness(w http.ResponseWriter, r *http.Request) {}
+func Readiness(w http.ResponseWriter, r *http.Request) {
+	// Readiness probe do kubernetes
+}
+
+func Liveness(w http.ResponseWriter, r *http.Request) {
+	// Liveness probe do kubernetes
+}
 
 func SystemSize(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileId, _ := strconv.Atoi(vars["fileId"])
 
-	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal("Arquivo não encontrado, tente novamente")
+		log.Fatal(mensagemErroArquivo)
 	}
 
-	systemSize, _ := functions.SystemInfo(tabela_dados)
+	systemSize, _ := functions.SystemInfo(tabelaDados)
 	json.NewEncoder(w).Encode(systemSize)
 }
 
@@ -34,12 +43,12 @@ func SystemBars(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileId, _ := strconv.Atoi(vars["fileId"])
 
-	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal("Arquivo não encontrado, tente novamente")
+		log.Fatal(mensagemErroArquivo)
 	}
 
-	_, bars := functions.SystemInfo(tabela_dados)
+	_, bars := functions.SystemInfo(tabelaDados)
 	json.NewEncoder(w).Encode(bars)
 }
 
@@ -47,13 +56,13 @@ func AllElements(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fileId, _ := strconv.Atoi(vars["fileId"])
 
-	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal("Arquivo não encontrado, tente novamente")
+		log.Fatal(mensagemErroArquivo)
 	}
 
-	models.Elements["1"] = elements.Elementos_tipo_1(tabela_dados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabela_dados)
+	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
+	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
 	json.NewEncoder(w).Encode(models.Elements)
 }
@@ -63,13 +72,13 @@ func AllElementsType(w http.ResponseWriter, r *http.Request) {
 	fileId, _ := strconv.Atoi(vars["fileId"])
 	typeId := vars["typeId"]
 
-	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal("Arquivo não encontrado, tente novamente")
+		log.Fatal(mensagemErroArquivo)
 	}
 
-	models.Elements["1"] = elements.Elementos_tipo_1(tabela_dados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabela_dados)
+	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
+	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
 	json.NewEncoder(w).Encode(models.Elements[typeId])
 }
@@ -80,13 +89,13 @@ func OneElement(w http.ResponseWriter, r *http.Request) {
 	typeId := vars["typeId"]
 	elementId, _ := strconv.Atoi(vars["elementId"])
 
-	tabela_dados, err := excelize.OpenFile("./files/" + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal("Arquivo não encontrado, tente novamente")
+		log.Fatal(mensagemErroArquivo)
 	}
 
-	models.Elements["1"] = elements.Elementos_tipo_1(tabela_dados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabela_dados)
+	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
+	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
 	for _, element := range models.Elements[typeId] {
 		if element.Id == elementId {
