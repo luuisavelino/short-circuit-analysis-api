@@ -7,10 +7,10 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func Impedancia(resistencia_linha string, reatancia_linha string, impedanciaAtual_str string) complex128 {
-	var resistencia, _ = strconv.ParseFloat(resistencia_linha, 64)
-	var reatancia, _ = strconv.ParseFloat(reatancia_linha, 64)
-	var impedanciaAtual, _ = strconv.ParseComplex(impedanciaAtual_str, 128)
+func Impedancia(resistenciaLinha string, reatanciaLinha string, impedanciaAtualStr string) complex128 {
+	var resistencia, _ = strconv.ParseFloat(resistenciaLinha, 64)
+	var reatancia, _ = strconv.ParseFloat(reatanciaLinha, 64)
+	var impedanciaAtual, _ = strconv.ParseComplex(impedanciaAtualStr, 128)
 
 	impedancia := complex(resistencia, reatancia)
 
@@ -21,8 +21,8 @@ func Impedancia(resistencia_linha string, reatancia_linha string, impedanciaAtua
 	return impedancia
 }
 
-func StringToFloat(grandeza_str string) float64 {
-	grandeza, _ := strconv.ParseFloat(grandeza_str, 64)
+func StringToFloat(grandezaStr string) float64 {
+	grandeza, _ := strconv.ParseFloat(grandezaStr, 64)
 
 	return grandeza
 }
@@ -34,8 +34,8 @@ func ErrorValidade(err error) {
 	}
 }
 
-func SystemInfo(tabela_excel *excelize.File) (int, []string) {
-	barras, _ := tabela_excel.GetRows(tabela_excel.GetSheetList()[0])
+func SystemInfo(tabelaExcel *excelize.File) (int, []string) {
+	barras, _ := tabelaExcel.GetRows(tabelaExcel.GetSheetList()[0])
 	systemSize := len(barras) - 2
 
 	var bars []string
