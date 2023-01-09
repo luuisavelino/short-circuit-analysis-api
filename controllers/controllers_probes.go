@@ -1,12 +1,14 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-func Readiness(c *gin.Context) {
-	// Readiness probe do kubernetes
+	"github.com/gin-gonic/gin"
+)
 
-}
-
-func Liveness(c *gin.Context) {
-	// Liveness probe do kubernetes
+// Readiness e Liveness probe do kubernetes
+func HealthGET(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+	  "status": "UP",
+	})
 }
