@@ -8,7 +8,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func transformadores(tabela_excel *excelize.File) map[string]models.Element {
+func Transformadores(tabela_excel *excelize.File) map[string]models.Element {
 
 	dadosTransformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
 	dadosTransformadores = dadosTransformadores[2:]
@@ -65,7 +65,7 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File) map[string]models.Element {
 	functions.ErrorValidade(err)
 
 	// Adicionando todos os elementos dos transformadores como tipos 2 e 3
-	for _, dado_do_transformador := range transformadores(tabela_excel) {
+	for _, dado_do_transformador := range Transformadores(tabela_excel) {
 		elementosTipo23[dado_do_transformador.De+"-"+dado_do_transformador.Para] = dado_do_transformador
 	}
 	elementId := len(elementosTipo23)

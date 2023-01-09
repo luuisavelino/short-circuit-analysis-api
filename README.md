@@ -15,7 +15,7 @@ Projeto responsável por retornar todos os elementos do tipo 1, 2 e 3, do sistem
 
 ## Environment
 
-```
+```bash
 short-circuit
 ```
 

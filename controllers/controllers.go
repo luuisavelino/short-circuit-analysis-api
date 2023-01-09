@@ -1,120 +1,121 @@
 package controllers
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
 	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/elements"
-	"github.com/luuisavelino/short-circuit-analysis-elements/pkg/functions"
 	"github.com/xuri/excelize/v2"
 )
 
 const (
-	mensagemErroArquivo = "Arquivo não encontrado, tente novamente"
+	mensagemErroIdArquivo = "Id do arquivo inválido"
+	mensagemErroArquivo   = "Arquivo não encontrado"
 	path                  = "./files/"
 )
 
-func Readiness(w http.ResponseWriter, r *http.Request) {
-	// Readiness probe do kubernetes
+func AllFiles(c *gin.Context) {
+	c.JSON(http.StatusOK, models.Files)
 }
 
-func Liveness(w http.ResponseWriter, r *http.Request) {
-	// Liveness probe do kubernetes
-}
-
-func SystemSize(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-
-	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
+func OneFile(c *gin.Context) {
+	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
 	if err != nil {
-		log.Fatal(mensagemErroArquivo)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroIdArquivo,
+		})
+		return
 	}
 
-	systemSize, _ := functions.SystemInfo(tabelaDados)
-	json.NewEncoder(w).Encode(systemSize)
+	for position, file := range models.Files {
+		if position == fileId {
+			c.JSON(http.StatusOK, gin.H{
+				"file": file,
+			})
+
+		}
+	}
 }
 
-func SystemBars(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-
-	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
+func AllElements(c *gin.Context) {
+	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
 	if err != nil {
-		log.Fatal(mensagemErroArquivo)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroIdArquivo,
+		})
 	}
 
-	_, bars := functions.SystemInfo(tabelaDados)
-	json.NewEncoder(w).Encode(bars)
-}
-
-func AllElements(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-
 	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal(mensagemErroArquivo)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroArquivo,
+		})
 	}
 
 	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
 	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
-	json.NewEncoder(w).Encode(models.Elements)
+	c.JSON(http.StatusOK, models.Elements)
 }
 
-func AllElementsType(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-	typeId := vars["typeId"]
+func AllElementsType(c *gin.Context) {
+	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroIdArquivo,
+		})
+	}
+
+	typeId := c.Params.ByName("typeId")
 
 	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal(mensagemErroArquivo)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroArquivo,
+		})
 	}
 
 	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
 	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
-	json.NewEncoder(w).Encode(models.Elements[typeId])
+	c.JSON(http.StatusOK, gin.H{
+		"element": models.Elements[typeId],
+	})
 }
 
-func OneElement(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-	typeId := vars["typeId"]
-	elementId, _ := strconv.Atoi(vars["elementId"])
+func OneElement(c *gin.Context) {
+	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroIdArquivo,
+		})
+	}
+
+	typeId := c.Params.ByName("typeId")
+	elementId, err := strconv.Atoi(c.Params.ByName("elementId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": "Elemento não encontrado",
+		})
+	}
 
 	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
 	if err != nil {
-		log.Fatal(mensagemErroArquivo)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": mensagemErroArquivo,
+		})
+		return
 	}
-
 	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
 	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
 
 	for _, element := range models.Elements[typeId] {
 		if element.Id == elementId {
-			json.NewEncoder(w).Encode(element)
-		}
-	}
-}
-
-func AllFiles(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(models.Files)
-}
-
-func OneFile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fileId, _ := strconv.Atoi(vars["fileId"])
-
-	for position, file := range models.Files {
-		if position == fileId {
-			json.NewEncoder(w).Encode(file)
+			c.JSON(http.StatusOK, gin.H{
+				"element": element,
+			})
 		}
 	}
 }

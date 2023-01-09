@@ -1,23 +1,24 @@
 package routes
 
 import (
-	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/luuisavelino/short-circuit-analysis-elements/controllers"
+	"github.com/luuisavelino/short-circuit-analysis-elements/middleware"
 )
 
-func HandleRequest() {
-	r := mux.NewRouter()
-	r.HandleFunc("/health/liveness", controllers.Liveness).Methods("Get")
-	r.HandleFunc("/health/readiness", controllers.Readiness).Methods("Get")
-	r.HandleFunc("/api/files", controllers.AllFiles).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}", controllers.OneFile).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}/size", controllers.SystemSize).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}/bars", controllers.SystemBars).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}/elements", controllers.AllElements).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}/elements/type/{typeId}", controllers.AllElementsType).Methods("Get")
-	r.HandleFunc("/api/files/{fileId}/elements/type/{typeId}/element/{elementId}", controllers.OneElement).Methods("Get")
-	log.Fatal(http.ListenAndServe(":8080", r))
+func HandleRequests() {
+	r := gin.Default()
+	r.Use(middleware.Logger())
+
+	r.GET("/health/liveness", controllers.Liveness)
+	r.GET("/health/readiness", controllers.Readiness)
+	r.GET("/api/files", controllers.AllFiles)
+	r.GET("/api/files/:fileId", controllers.OneFile)
+	r.GET("/api/files/:fileId/size", controllers.SystemSize)
+	r.GET("/api/files/:fileId/bars", controllers.SystemBars)
+	r.GET("/api/files/:fileId/elements", controllers.AllElements)
+	r.GET("/api/files/:fileId/elements/type/:typeId", controllers.AllElementsType)
+	r.GET("/api/files/:fileId/elements/type/:typeId/element/:elementId", controllers.OneElement)
+
+	r.Run(":8080")
 }
