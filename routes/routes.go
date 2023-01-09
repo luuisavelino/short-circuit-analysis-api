@@ -7,9 +7,13 @@ import (
 )
 
 func HandleRequests() {
-	
-	r := gin.Default()
-	r.Use(middleware.Logger())
+	r := gin.New()
+
+	r.Use(
+		gin.LoggerWithWriter(gin.DefaultWriter, "/actuator/health"),
+		gin.Recovery(),
+		middleware.Logger(),
+	)
 
 	r.GET("/actuator/health", controllers.HealthGET)
 	r.GET("/api/files", controllers.AllFiles)
