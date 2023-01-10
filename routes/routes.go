@@ -26,13 +26,18 @@ func HandleRequests() {
 		files.GET("/:fileId", controllers.OneFile)
 	}
 
-	system := router.Group("/api/files/:fileId")
+	sysInfo := router.Group("/api/files/:fileId")
 	{
-		system.GET("/size", controllers.SystemSize)
-		system.GET("/bars", controllers.SystemBars)
-		system.GET("/elements", controllers.AllElements)
-		system.GET("/elements/type/:typeId", controllers.AllElementsType)
-		system.GET("/elements/type/:typeId/element/:elementId", controllers.OneElement)
+		sysInfo.GET("/size", controllers.SystemSize)
+		sysInfo.GET("/bars", controllers.SystemBars)
+		sysInfo.GET("/types", controllers.AllTypes)
+		sysInfo.GET("/types/:typeId", controllers.OneType)
+	}
+
+	elements := router.Group("/api/files/:fileId/types/:typeId")
+	{
+		elements.GET("/elements", controllers.AllElementsType)
+		elements.GET("/elements/:elementId/", controllers.OneElement)
 	}
 
 	router.Run(":8080")

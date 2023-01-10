@@ -10,3 +10,9 @@ type Element struct {
 }
 
 var Elements = make(map[string]map[string]Element)
+
+type ElementType struct {
+	Info string `json:"info"`
+}
+
+var ElementTypes = make(map[string]ElementType)

@@ -39,38 +39,13 @@ func OneFile(c *gin.Context) {
 	}
 }
 
-func AllElements(c *gin.Context) {
-	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroIdArquivo,
-		})
-	}
+func AllTypes(c *gin.Context) {
+	c.JSON(http.StatusOK, models.ElementTypes)
+}
 
-	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroArquivo,
-		})
-	}
-
-	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 1",
-		})
-		return
-	}
-
-	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 2 ou 3",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, models.Elements)
+func OneType(c *gin.Context) {
+	typeId := c.Params.ByName("typeId")
+	c.JSON(http.StatusOK, models.ElementTypes[typeId])
 }
 
 func AllElementsType(c *gin.Context) {
@@ -95,12 +70,19 @@ func AllElementsType(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 1",
 		})
-		return
 	}
+
 	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 2 ou 3",
+		})
+		return
+	}
+
+	if typeId == "0" {
+		c.JSON(http.StatusOK, gin.H{
+			"element": models.Elements,
 		})
 		return
 	}
@@ -119,6 +101,7 @@ func OneElement(c *gin.Context) {
 	}
 
 	typeId := c.Params.ByName("typeId")
+
 	elementId, err := strconv.Atoi(c.Params.ByName("elementId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
