@@ -20,7 +20,7 @@ func HandleRequests() {
 		actuator.GET("/health", controllers.HealthGET)
 	}
 
-	files := router.Group("/api/files")
+	files := router.Group("/files")
 	{
 		files.GET("/", controllers.AllFiles)
 		files.GET("/:fileId", controllers.OneFile)

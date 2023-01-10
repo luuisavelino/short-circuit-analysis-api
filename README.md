@@ -27,12 +27,16 @@ short-circuit
 
 * /api/files
 * /api/files/{fileId}
-* /api/files/{fileId}/elements
-* /api/files/{fileId}/elements/type/{typeId}
-* /api/files/{fileId}/elements/type/{typeId}/element/{elementId}
+* /api/files/{fileId}/size
+* /api/files/{fileId}/bars
+* /api/files/{fileId}/type
+* /api/files/{fileId}/type/{typeId}
+* /api/files/{fileId}/type/{typeId}/elements
+* /api/files/{fileId}/type/{typeId}/elements/{elementId}
 
 ## Historic
 
 |Version|Description|Requester|Date|
 |:------|:----------|:---|:---|
+|2.0.0|Alterado framework de API REST e alterado os endpoints|Luis Avelino|16-12-2022|
 |1.0.0|Desenvolver API dos elementos do sistema|Luis Avelino|16-12-2022|
