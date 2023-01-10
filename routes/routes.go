@@ -20,13 +20,13 @@ func HandleRequests() {
 		actuator.GET("/health", controllers.HealthGET)
 	}
 
-	files := router.Group("/files")
+	files := router.Group("api/v2/files")
 	{
 		files.GET("/", controllers.AllFiles)
 		files.GET("/:fileId", controllers.OneFile)
 	}
 
-	sysInfo := router.Group("/api/files/:fileId")
+	sysInfo := files.Group("/:fileId")
 	{
 		sysInfo.GET("/size", controllers.SystemSize)
 		sysInfo.GET("/bars", controllers.SystemBars)
@@ -34,7 +34,7 @@ func HandleRequests() {
 		sysInfo.GET("/types/:typeId", controllers.OneType)
 	}
 
-	elements := router.Group("/api/files/:fileId/types/:typeId")
+	elements := sysInfo.Group("/types/:typeId")
 	{
 		elements.GET("/elements", controllers.AllElementsType)
 		elements.GET("/elements/:elementId/", controllers.OneElement)
