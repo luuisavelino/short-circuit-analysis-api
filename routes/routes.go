@@ -7,22 +7,33 @@ import (
 )
 
 func HandleRequests() {
-	r := gin.New()
+	router := gin.New()
 
-	r.Use(
+	router.Use(
 		gin.LoggerWithWriter(gin.DefaultWriter, "/actuator/health"),
 		gin.Recovery(),
 		middleware.Logger(),
 	)
 
-	r.GET("/actuator/health", controllers.HealthGET)
-	r.GET("/api/files", controllers.AllFiles)
-	r.GET("/api/files/:fileId", controllers.OneFile)
-	r.GET("/api/files/:fileId/size", controllers.SystemSize)
-	r.GET("/api/files/:fileId/bars", controllers.SystemBars)
-	r.GET("/api/files/:fileId/elements", controllers.AllElements)
-	r.GET("/api/files/:fileId/elements/type/:typeId", controllers.AllElementsType)
-	r.GET("/api/files/:fileId/elements/type/:typeId/element/:elementId", controllers.OneElement)
+	actuator := router.Group("/actuator")
+	{
+		actuator.GET("/health", controllers.HealthGET)
+	}
 
-	r.Run(":8080")
+	files := router.Group("/api/files")
+	{
+		files.GET("/", controllers.AllFiles)
+		files.GET("/:fileId", controllers.OneFile)
+	}
+
+	system := router.Group("/api/files/:fileId")
+	{
+		system.GET("/size", controllers.SystemSize)
+		system.GET("/bars", controllers.SystemBars)
+		system.GET("/elements", controllers.AllElements)
+		system.GET("/elements/type/:typeId", controllers.AllElementsType)
+		system.GET("/elements/type/:typeId/element/:elementId", controllers.OneElement)
+	}
+
+	router.Run(":8080")
 }

@@ -1,7 +1,7 @@
 package functions
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 
 	"github.com/xuri/excelize/v2"
@@ -27,15 +27,13 @@ func StringToFloat(grandezaStr string) float64 {
 	return grandeza
 }
 
-func ErrorValidade(err error) {
+func SystemInfo(tabelaExcel *excelize.File) (int, []string, error) {
+	barras, err := tabelaExcel.GetRows(tabelaExcel.GetSheetList()[0])
 	if err != nil {
-		log.Fatal(err.Error())
-		return
+		fmt.Println(err.Error())
+		return 0, nil, err
 	}
-}
 
-func SystemInfo(tabelaExcel *excelize.File) (int, []string) {
-	barras, _ := tabelaExcel.GetRows(tabelaExcel.GetSheetList()[0])
 	systemSize := len(barras) - 2
 
 	var bars []string
@@ -44,5 +42,5 @@ func SystemInfo(tabelaExcel *excelize.File) (int, []string) {
 		bars = append(bars, (barras[x][0]))
 	}
 
-	return systemSize, bars
+	return systemSize, bars, nil
 }

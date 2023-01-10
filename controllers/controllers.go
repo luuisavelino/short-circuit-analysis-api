@@ -54,8 +54,21 @@ func AllElements(c *gin.Context) {
 		})
 	}
 
-	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
+	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 1",
+		})
+		return
+	}
+
+	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 2 ou 3",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, models.Elements)
 }
@@ -77,8 +90,20 @@ func AllElementsType(c *gin.Context) {
 		})
 	}
 
-	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
+	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 1",
+		})
+		return
+	}
+	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 2 ou 3",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"element": models.Elements[typeId],
@@ -108,8 +133,21 @@ func OneElement(c *gin.Context) {
 		})
 		return
 	}
-	models.Elements["1"] = elements.Elementos_tipo_1(tabelaDados)
-	models.Elements["2"] = elements.Elementos_tipo_2_3(tabelaDados)
+	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 1",
+		})
+		return
+	}
+
+	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Erro": "Erro nos elementos do tipo 2 ou 3",
+		})
+		return
+	}
 
 	for _, element := range models.Elements[typeId] {
 		if element.Id == elementId {

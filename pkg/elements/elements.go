@@ -1,6 +1,7 @@
 package elements
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
@@ -8,11 +9,14 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func Transformadores(tabela_excel *excelize.File) map[string]models.Element {
+func Transformadores(tabela_excel *excelize.File) (map[string]models.Element, error) {
 
 	dadosTransformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
 	dadosTransformadores = dadosTransformadores[2:]
-	functions.ErrorValidade(err)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
 
 	elementos_transformadores := make(map[string]models.Element)
 	for x := 0; x < len(dadosTransformadores); x++ {
@@ -34,15 +38,18 @@ func Transformadores(tabela_excel *excelize.File) map[string]models.Element {
 		}
 	}
 
-	return elementos_transformadores
+	return elementos_transformadores, nil
 }
 
-func Elementos_tipo_1(tabela_excel *excelize.File) map[string]models.Element {
+func Elementos_tipo_1(tabela_excel *excelize.File) (map[string]models.Element, error) {
 	var elementosTipo1 = make(map[string]models.Element)
 
 	dadosLinhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[2])
 	dadosLinhas = dadosLinhas[1:]
-	functions.ErrorValidade(err)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
 
 	for x := 0; x < len(dadosLinhas); x++ {
 		elementosTipo1[dadosLinhas[x][0]] = models.Element{
@@ -54,18 +61,23 @@ func Elementos_tipo_1(tabela_excel *excelize.File) map[string]models.Element {
 		}
 	}
 
-	return elementosTipo1
+	return elementosTipo1, nil
 }
 
-func Elementos_tipo_2_3(tabela_excel *excelize.File) map[string]models.Element {
+func Elementos_tipo_2_3(tabela_excel *excelize.File) (map[string]models.Element, error) {
 	var elementosTipo23 = make(map[string]models.Element)
 
 	dadosLinhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[1])
 	dadosLinhas = dadosLinhas[2:]
-	functions.ErrorValidade(err)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	transformadores, _ := Transformadores(tabela_excel)
 
 	// Adicionando todos os elementos dos transformadores como tipos 2 e 3
-	for _, dado_do_transformador := range Transformadores(tabela_excel) {
+	for _, dado_do_transformador := range transformadores {
 		elementosTipo23[dado_do_transformador.De+"-"+dado_do_transformador.Para] = dado_do_transformador
 	}
 	elementId := len(elementosTipo23)
@@ -86,5 +98,5 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File) map[string]models.Element {
 		elementId++
 	}
 
-	return elementosTipo23
+	return elementosTipo23, nil
 }
