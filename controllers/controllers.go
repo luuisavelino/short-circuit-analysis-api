@@ -82,13 +82,14 @@ func AllElementsType(c *gin.Context) {
 
 	if typeId == "0" {
 		c.JSON(http.StatusOK, gin.H{
-			"element": models.Elements,
+			"1": models.Elements["1"],
+			"2": models.Elements["2"],
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"element": models.Elements[typeId],
+		typeId: models.Elements[typeId],
 	})
 }
 
@@ -116,6 +117,7 @@ func OneElement(c *gin.Context) {
 		})
 		return
 	}
+
 	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
