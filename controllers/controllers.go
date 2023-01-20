@@ -65,14 +65,14 @@ func AllElementsType(c *gin.Context) {
 		})
 	}
 
-	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
+	models.Elements["1"], err = elements.ElementosTipo1(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 1",
 		})
 	}
 
-	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
+	models.Elements["2"], err = elements.ElementosTipo23(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 2 ou 3",
@@ -118,7 +118,7 @@ func OneElement(c *gin.Context) {
 		return
 	}
 
-	models.Elements["1"], err = elements.Elementos_tipo_1(tabelaDados)
+	models.Elements["1"], err = elements.ElementosTipo1(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 1",
@@ -126,7 +126,7 @@ func OneElement(c *gin.Context) {
 		return
 	}
 
-	models.Elements["2"], err = elements.Elementos_tipo_2_3(tabelaDados)
+	models.Elements["2"], err = elements.ElementosTipo23(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro nos elementos do tipo 2 ou 3",
