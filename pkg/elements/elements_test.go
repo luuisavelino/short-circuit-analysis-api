@@ -1,39 +1,39 @@
 package elements
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
+	"github.com/stretchr/testify/assert"
 	"github.com/xuri/excelize/v2"
 )
 
 func preenchePlanilha() *excelize.File {
 	var f = excelize.NewFile()
 	f.NewSheet("dados_de_transformadores")
-	f.SetCellValue("Transformadores", "A3", "895")
-	f.SetCellValue("Transformadores", "B3", "814")
-	f.SetCellValue("Transformadores", "C3", "Bateias")
-	f.SetCellValue("Transformadores", "D3", "0,032")
-	f.SetCellValue("Transformadores", "E3", "1,146")
-	f.SetCellValue("Transformadores", "F3", "1,26")
-	f.SetCellValue("Transformadores", "G3", "4,1")
+	f.SetCellValue("dados_de_transformadores", "A3", "895")
+	f.SetCellValue("dados_de_transformadores", "B3", "814")
+	f.SetCellValue("dados_de_transformadores", "C3", "Bateias")
+	f.SetCellValue("dados_de_transformadores", "D3", "0,032")
+	f.SetCellValue("dados_de_transformadores", "E3", "1,146")
+	f.SetCellValue("dados_de_transformadores", "F3", "1,26")
+	f.SetCellValue("dados_de_transformadores", "G3", "4,1")
 
 	f.NewSheet("dados_de_geradores")
-	f.SetCellValue("Geradores", "A2", "1")
-	f.SetCellValue("Geradores", "B2", "first")
-	f.SetCellValue("Geradores", "C2", "4,5")
-	f.SetCellValue("Geradores", "D2", "3,4")
-	f.SetCellValue("Geradores", "E2", "10")
+	f.SetCellValue("dados_de_geradores", "A2", "1")
+	f.SetCellValue("dados_de_geradores", "B2", "first")
+	f.SetCellValue("dados_de_geradores", "C2", "4,5")
+	f.SetCellValue("dados_de_geradores", "D2", "3,4")
+	f.SetCellValue("dados_de_geradores", "E2", "10")
 
 	f.NewSheet("dados_de_linha")
-	f.SetCellValue("Linha", "A3", "824")
-	f.SetCellValue("Linha", "B3", "933")
-	f.SetCellValue("Linha", "C3", "G.B.Munhoz-Areia")
-	f.SetCellValue("Linha", "D3", "0,01")
-	f.SetCellValue("Linha", "E3", "0,124")
-	f.SetCellValue("Linha", "F3", "0,04")
-	f.SetCellValue("Linha", "G3", "0,29")
+	f.SetCellValue("dados_de_linha", "A3", "824")
+	f.SetCellValue("dados_de_linha", "B3", "933")
+	f.SetCellValue("dados_de_linha", "C3", "G.B.Munhoz-Areia")
+	f.SetCellValue("dados_de_linha", "D3", "0,01")
+	f.SetCellValue("dados_de_linha", "E3", "0,124")
+	f.SetCellValue("dados_de_linha", "F3", "0,04")
+	f.SetCellValue("dados_de_linha", "G3", "0,29")
 
 	return f
 }
@@ -42,27 +42,18 @@ var f = preenchePlanilha()
 
 func TestTransformadores(t *testing.T) {
 	expected := map[string]models.Element{"895-814": {Id: 0, De: "895", Para: "814", Nome: "Bateias", Z_positiva: "(0.032+1.146i)", Z_zero: "(0+13.559999999999999i)"}}
-	actual, err := Transformadores(f)
-	if err != nil {
-		t.Errorf("Expected no error, but got %s", err.Error())
-	}
+	result, err := Transformadores(f)
 
-	if fmt.Sprintf("%v", expected) != fmt.Sprintf("%v", actual) {
-		t.Errorf("Expected %v, but got %v", expected, actual)
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, expected, result)
 }
 
 func TestElementosTipo1(t *testing.T) {
 	expected := map[string]models.Element{"1": {Id: 0, De: "1", Nome: "first", Z_positiva: "(0+0.045i)", Z_zero: "(0+33.4i)"}}
-	actual, err := ElementosTipo1(f)
+	result, err := ElementosTipo1(f)
 
-	if err != nil {
-		t.Errorf("Expected no error, but got %s", err.Error())
-	}
-
-	if fmt.Sprintf("%v", expected) != fmt.Sprintf("%v", actual) {
-		t.Errorf("\nExpected \t%v\nbut got \t%v", expected, actual)
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, expected, result)
 }
 
 func TestElementosTipo23(t *testing.T) {
@@ -75,13 +66,8 @@ func TestElementosTipo23(t *testing.T) {
 		},
 	}
 
-	actual, err := ElementosTipo23(f)
+	result, err := ElementosTipo23(f)
 
-	if err != nil {
-		t.Errorf("Expected no error, but got %s", err.Error())
-	}
-
-	if fmt.Sprintf("%v", expected) != fmt.Sprintf("%v", actual) {
-		t.Errorf("\nExpected \t%v\nbut got \t%v", expected, actual)
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, expected, result)
 }

@@ -34,9 +34,13 @@ func OneFile(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"file": file,
 			})
-
+			return
 		}
 	}
+
+	c.JSON(http.StatusBadRequest, gin.H{
+		"Not Found": mensagemErroIdArquivo,
+	})
 }
 
 func AllTypes(c *gin.Context) {
@@ -45,6 +49,15 @@ func AllTypes(c *gin.Context) {
 
 func OneType(c *gin.Context) {
 	typeId := c.Params.ByName("typeId")
+
+	_, exit := models.ElementTypes[typeId]
+	if !exit {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Not Found": "Tipo não encontrado",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, models.ElementTypes[typeId])
 }
 

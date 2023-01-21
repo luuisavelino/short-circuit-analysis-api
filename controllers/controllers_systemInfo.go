@@ -26,7 +26,7 @@ func SystemSize(c *gin.Context) {
 		return
 	}
 
-	systemSize, _, err := functions.SystemInfo(tabelaDados)
+	err = functions.SystemInfo(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro na tabela dos geradores",
@@ -36,7 +36,7 @@ func SystemSize(c *gin.Context) {
 
 
 	c.JSON(http.StatusOK, gin.H{
-		"size": systemSize,
+		"size": models.System.Size,
 	})
 }
 
@@ -57,7 +57,7 @@ func SystemBars(c *gin.Context) {
 		return
 	}
 
-	_, bars, err := functions.SystemInfo(tabelaDados)
+	err = functions.SystemInfo(tabelaDados)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"Erro": "Erro na tabela dos geradores",
@@ -67,6 +67,6 @@ func SystemBars(c *gin.Context) {
 
 
 	c.JSON(http.StatusOK, gin.H{
-		"bars": bars,
+		"bars": models.System.Bars,
 	})
 }

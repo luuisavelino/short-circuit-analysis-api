@@ -16,3 +16,10 @@ type ElementType struct {
 }
 
 var ElementTypes = make(map[string]ElementType)
+
+type Info struct {
+	Size int
+	Bars []string
+}
+
+var System Info

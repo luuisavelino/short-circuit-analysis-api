@@ -1,10 +1,10 @@
 package functions
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/luuisavelino/short-circuit-analysis-elements/models"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -42,22 +42,21 @@ func StringToFloat(grandezaStr string) (float64, error) {
 	return grandeza, nil
 }
 
-func SystemInfo(tabelaExcel *excelize.File) (int, []string, error) {
-	barras, err := tabelaExcel.GetRows("Barra")
+func SystemInfo(tabelaExcel *excelize.File) error {
+	data, err := tabelaExcel.GetRows("dados_de_barra")
+	var barras models.Info
 	if err != nil {
-		fmt.Println(err.Error())
-		return 0, nil, err
+		return err
 	}
 
-	systemSize := len(barras) - 2
+	models.System.Size = len(data) - 2
 
-	var bars []string
-
-	for x := 2; x < len(barras); x++ {
-		bars = append(bars, (barras[x][0]))
+	for x := 2; x < len(data); x++ {
+		barras.Bars = append(barras.Bars, (data[x][0]))
 	}
 
-	return systemSize, bars, nil
+	models.System.Bars = barras.Bars
+	return nil
 }
 
 func replaceCommaWithDot(s string) string {
