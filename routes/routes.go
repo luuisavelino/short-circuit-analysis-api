@@ -37,7 +37,7 @@ func HandleRequests() {
 	elements := sysInfo.Group("/types/:typeId")
 	{
 		elements.GET("/elements", controllers.AllElementsType)
-		elements.GET("/elements/:elementId", controllers.OneElement)
+		elements.GET("/elements/:element", controllers.OneElement)
 	}
 
 	router.Run(":8080")

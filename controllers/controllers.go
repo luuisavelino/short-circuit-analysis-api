@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
@@ -21,25 +21,15 @@ func AllFiles(c *gin.Context) {
 }
 
 func OneFile(c *gin.Context) {
-	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
+	file, err := Files(c)
+
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroIdArquivo,
-		})
+		jsonError(c, err)
 		return
 	}
 
-	for position, file := range models.Files {
-		if position == fileId {
-			c.JSON(http.StatusOK, gin.H{
-				"file": file,
-			})
-			return
-		}
-	}
-
-	c.JSON(http.StatusBadRequest, gin.H{
-		"Not Found": mensagemErroIdArquivo,
+	c.JSON(http.StatusOK, gin.H{
+		"file": file,
 	})
 }
 
@@ -48,110 +38,88 @@ func AllTypes(c *gin.Context) {
 }
 
 func OneType(c *gin.Context) {
-	typeId := c.Params.ByName("typeId")
-
-	_, exit := models.ElementTypes[typeId]
-	if !exit {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": "Tipo não encontrado",
-		})
+	typeId, err := TypeId(c)
+	if err != nil {
+		jsonError(c, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, models.ElementTypes[typeId])
 }
 
-func AllElementsType(c *gin.Context) {
-	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
+func Elements(c *gin.Context) (map[string]map[string]models.Element, error) {
+	file, err := Files(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroIdArquivo,
-		})
+		return nil, err
 	}
 
-	typeId := c.Params.ByName("typeId")
-
-	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
+	tabelaDados, err := excelize.OpenFile(path + file.Nome)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroArquivo,
-		})
+		return nil, err
 	}
 
 	models.Elements["1"], err = elements.ElementosTipo1(tabelaDados)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 1",
-		})
+		return nil, err
 	}
 
 	models.Elements["2"], err = elements.ElementosTipo23(tabelaDados)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 2 ou 3",
-		})
+		return nil, err
+	}
+
+	return models.Elements, nil
+}
+
+func AllElementsType(c *gin.Context) {
+	elements, err := Elements(c)
+	if err != nil {
+		jsonError(c, err)
+		return
+	}
+
+	typeId, err := TypeId(c)
+	if err != nil {
+		jsonError(c, err)
 		return
 	}
 
 	if typeId == "0" {
 		c.JSON(http.StatusOK, gin.H{
-			"1": models.Elements["1"],
-			"2": models.Elements["2"],
+			"1": elements["1"],
+			"2": elements["2"],
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		typeId: models.Elements[typeId],
+		typeId: elements[typeId],
 	})
 }
 
 func OneElement(c *gin.Context) {
-	fileId, err := strconv.Atoi(c.Params.ByName("fileId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroIdArquivo,
-		})
-	}
+	element := c.Params.ByName("element")
 
-	typeId := c.Params.ByName("typeId")
-
-	elementId, err := strconv.Atoi(c.Params.ByName("elementId"))
+	elements, err := Elements(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": "Elemento não encontrado",
-		})
-	}
-
-	tabelaDados, err := excelize.OpenFile(path + models.Files[fileId].Nome)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Not Found": mensagemErroArquivo,
-		})
+		jsonError(c, err)
 		return
 	}
 
-	models.Elements["1"], err = elements.ElementosTipo1(tabelaDados)
+	typeId, err := TypeId(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 1",
-		})
+		jsonError(c, err)
 		return
 	}
 
-	models.Elements["2"], err = elements.ElementosTipo23(tabelaDados)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"Erro": "Erro nos elementos do tipo 2 ou 3",
-		})
-		return
-	}
-
-	for _, element := range models.Elements[typeId] {
-		if element.Id == elementId {
+	for _, systemElement := range elements[typeId] {
+		if systemElement.De == element {
 			c.JSON(http.StatusOK, gin.H{
-				"element": element,
+				element: systemElement,
 			})
+			return
 		}
 	}
+
+	jsonError(c, errors.New("elemento nao encontrado"))
 }
