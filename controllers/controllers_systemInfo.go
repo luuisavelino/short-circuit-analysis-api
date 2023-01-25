@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/luuisavelino/short-circuit-analysis-elements/models"
@@ -86,6 +87,31 @@ func TypeId(c *gin.Context) (string, error) {
 	}
 
 	return typeId, nil
+}
+
+func Element(c *gin.Context) (models.Element, error) {
+	element := c.Params.ByName("element")
+	parts := strings.Split(element, "-")
+	elementDe := parts[0]
+	elementPara := parts[1]
+
+	elements, err := Elements(c)
+	if err != nil {
+		return *new(models.Element), err
+	}
+
+	typeId, err := TypeId(c)
+	if err != nil {
+		return *new(models.Element), err
+	}
+
+	for _, systemElement := range elements[typeId] {
+		if systemElement.De == elementDe && systemElement.Para == elementPara {
+			return systemElement, nil
+		}
+	}
+
+	return *new(models.Element), errors.New("elemento nao encontrado")
 }
 
 func jsonError(c *gin.Context, err error) {

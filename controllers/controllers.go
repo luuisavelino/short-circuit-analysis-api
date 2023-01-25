@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -98,28 +97,13 @@ func AllElementsType(c *gin.Context) {
 }
 
 func OneElement(c *gin.Context) {
-	element := c.Params.ByName("element")
-
-	elements, err := Elements(c)
+	element, err := Element(c)
 	if err != nil {
 		jsonError(c, err)
 		return
 	}
 
-	typeId, err := TypeId(c)
-	if err != nil {
-		jsonError(c, err)
-		return
-	}
-
-	for _, systemElement := range elements[typeId] {
-		if systemElement.De == element {
-			c.JSON(http.StatusOK, gin.H{
-				element: systemElement,
-			})
-			return
-		}
-	}
-
-	jsonError(c, errors.New("elemento nao encontrado"))
+	c.JSON(http.StatusOK, gin.H{
+		element.De + "-" + element.Para: element,
+	})
 }

@@ -42,7 +42,6 @@ func Transformadores(tabela_excel *excelize.File) (map[string]models.Element, er
 		}
 
 		elementos_transformadores[transformador] = models.Element{
-			Id:         x,
 			De:         dadosTransformadores[x][0],
 			Para:       dadosTransformadores[x][1],
 			Nome:       dadosTransformadores[x][2],
@@ -82,7 +81,6 @@ func ElementosTipo1(tabela_excel *excelize.File) (map[string]models.Element, err
 		}
 
 		elementosTipo1[dadosLinhas[x][0]] = models.Element{
-			Id:         x,
 			De:         dadosLinhas[x][0],
 			Nome:       dadosLinhas[x][1],
 			Z_positiva: fmt.Sprint("(0+", z_positiva/100, "i)"),
@@ -115,18 +113,15 @@ func ElementosTipo23(tabela_excel *excelize.File) (map[string]models.Element, er
 	for x := 0; x < len(dadosLinhas); x++ {
 		z_positiva, err := functions.Impedancia(dadosLinhas[x][3], dadosLinhas[x][4], "0")
 		if err != nil {
-
 			return nil, err
 		}
 
 		z_zero, err := functions.Impedancia(dadosLinhas[x][5], dadosLinhas[x][6], "0")
 		if err != nil {
-
 			return nil, err
 		}
 
 		elementosTipo23[dadosLinhas[x][0]+"-"+dadosLinhas[x][1]] = models.Element{
-			Id:         elementId,
 			De:         dadosLinhas[x][0],
 			Para:       dadosLinhas[x][1],
 			Nome:       dadosLinhas[x][2],
